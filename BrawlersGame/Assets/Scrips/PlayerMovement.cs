@@ -31,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject jumpParticles;
     public GameObject hardLandingParticles;
     public GameObject dashParticles;
+    public GameObject rightFootKickParticles, leftFootKickParticles;
 
     void Start()
     {
@@ -183,6 +184,11 @@ public class PlayerMovement : MonoBehaviour
             anim.SetTrigger("Dash"); // Nedd to get animations! do this at home
     }
 
+    void Kick(int direction)
+    {
+        StartCoroutine(KickParticleTimer(direction == 1 ? true : false));
+    }
+
     #region Called from animation events methods
     public void Footstep(int right) 
     {
@@ -248,7 +254,7 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(time);
         canDash = true;
     }
-   public IEnumerator StopMoving(float time)
+    public IEnumerator StopMoving(float time)
     {
         canMove = false;
         yield return new WaitForSeconds(time);
@@ -265,6 +271,21 @@ public class PlayerMovement : MonoBehaviour
         canChangeDir = false;
         yield return new WaitForSeconds(time);
         canChangeDir = true;
+    }
+    public IEnumerator KickParticleTimer(bool direction)
+    {
+        if (direction)
+            rightFootKickParticles.SetActive(true);
+        else
+            leftFootKickParticles.SetActive(true);
+
+        yield return new WaitForSeconds(.5f);
+
+        if (direction)
+            rightFootKickParticles.SetActive(false);
+        else
+            leftFootKickParticles.SetActive(false);
+
     }
     #endregion
 }
