@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     Rigidbody rb;
     Animator anim;
+    ObjectPooler objPooler;
 
     public float movementSpeed = 3.5f, movementSmoothMultiplier = 9;
     public float fallMultiplier = 3.5f, lowJumpMultiplier = 2.5f;
@@ -26,13 +27,6 @@ public class PlayerMovement : MonoBehaviour
     float lastDir;
     Transform rightFoot, leftFoot;
 
-    // Tidy up
-    public GameObject footstepParticles;
-    public GameObject jumpParticles;
-    public GameObject hardLandingParticles;
-    public GameObject dashParticles;
-    public GameObject rightFootKickParticles, leftFootKickParticles;
-
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -43,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
 
         allButPlayer = 55; // set layer mask for box casting!
 
+        objPooler = ObjectPooler.instance;
     }
 
     void Update()
@@ -125,7 +120,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Jump()
     {
-        Instantiate(jumpParticles, transform.position - Vector3.up * .9f, Quaternion.identity);
+        objPooler.SpawnFromPool("Jump", transform.position - Vector3.up * .9f, Quaternion.identity);
 
         rb.velocity = new Vector2(rb.velocity.x, 0);
         rb.velocity += Vector3.up * jumpForce;
@@ -140,13 +135,13 @@ public class PlayerMovement : MonoBehaviour
         if (isWalledRight) 
         {
             jumpDirection = Vector2.left * 1.5f + Vector2.up / 1.5f;
-            Instantiate(jumpParticles, transform.position + Vector3.right / 2, Quaternion.identity);
+            objPooler.SpawnFromPool("Jump", transform.position - Vector3.up * .9f, Quaternion.identity);
 
         }
         else 
         {
             jumpDirection = Vector2.right * 1.5f + Vector2.up / 1.5f;
-            Instantiate(jumpParticles, transform.position + Vector3.left / 2, Quaternion.identity);
+            objPooler.SpawnFromPool("Jump", transform.position - Vector3.up * .9f, Quaternion.identity);
 
         }
 
@@ -171,22 +166,17 @@ public class PlayerMovement : MonoBehaviour
 
         if (IsGrounded())
         {
-            Instantiate(jumpParticles, transform.position - Vector3.up * .9f, Quaternion.identity);
+            objPooler.SpawnFromPool("Jump", transform.position - Vector3.up * .9f, Quaternion.identity);
             rb.velocity = direction.normalized * 40;
         }
         else
             rb.velocity = direction.normalized * 30;
 
-        Instantiate(dashParticles, transform.position, Quaternion.LookRotation(direction, Vector3.up));
+        objPooler.SpawnFromPool("Dash", transform.position, Quaternion.LookRotation(direction, Vector3.up));
 
 
         if (!IsGrounded())
             anim.SetTrigger("Dash"); // Nedd to get animations! do this at home
-    }
-
-    void Kick(int direction)
-    {
-        StartCoroutine(KickParticleTimer(direction == 1 ? true : false));
     }
 
     #region Called from animation events methods
@@ -194,11 +184,11 @@ public class PlayerMovement : MonoBehaviour
     {
         Ray ray = new Ray(right == 1 ? rightFoot.position : leftFoot.position, -Vector3.up);
         if (Physics.Raycast(ray, out RaycastHit hit, .5f))
-            Instantiate(footstepParticles, hit.point, Quaternion.identity);
+            objPooler.SpawnFromPool("FootStep", hit.point, Quaternion.identity);
     }
     public void HardLanding()
     {
-        Instantiate(hardLandingParticles, transform.position - Vector3.up * .9f, Quaternion.identity);
+        objPooler.SpawnFromPool("HardLanding", transform.position - Vector3.up * .9f, Quaternion.identity);
 
         StartCoroutine(StopMoving(1f));
     }
@@ -271,21 +261,6 @@ public class PlayerMovement : MonoBehaviour
         canChangeDir = false;
         yield return new WaitForSeconds(time);
         canChangeDir = true;
-    }
-    public IEnumerator KickParticleTimer(bool direction)
-    {
-        if (direction)
-            rightFootKickParticles.SetActive(true);
-        else
-            leftFootKickParticles.SetActive(true);
-
-        yield return new WaitForSeconds(.5f);
-
-        if (direction)
-            rightFootKickParticles.SetActive(false);
-        else
-            leftFootKickParticles.SetActive(false);
-
     }
     #endregion
 }
