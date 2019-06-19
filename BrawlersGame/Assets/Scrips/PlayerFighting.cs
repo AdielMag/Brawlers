@@ -12,6 +12,7 @@ public class PlayerFighting : MonoBehaviour
     int heavyAttack;
 
     PlayerMovement pMov;
+    PlayerInput pInput;
     Animator anim;
     Rigidbody rb;
 
@@ -20,6 +21,7 @@ public class PlayerFighting : MonoBehaviour
     private void Start()
     {
         pMov = GetComponent<PlayerMovement>();
+        pInput = GetComponent<PlayerInput>();
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
 
@@ -29,19 +31,19 @@ public class PlayerFighting : MonoBehaviour
     private void Update()
     {
 
-        if (Input.GetButtonDown("LightAtt"))
+        if (Input.GetButtonDown(pInput.ligthAttack))
         {
             kicks = Random.Range(1, 3);
         }
-        else if (Input.GetButtonUp("LightAtt"))
+        else if (Input.GetButtonUp(pInput.ligthAttack))
         {
             kicks = 0;
         }
 
-        if (Input.GetButtonDown("HeavyAtt")) 
+        if (Input.GetButtonDown(pInput.heavyAttack)) 
         {
             heavyAttack = Random.Range(1, 4);
-        }else if (Input.GetButtonUp("HeavyAtt"))
+        }else if (Input.GetButtonUp(pInput.heavyAttack))
         {
             heavyAttack = 0;
         }

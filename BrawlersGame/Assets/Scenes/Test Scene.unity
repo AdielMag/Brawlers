@@ -1194,6 +1194,7 @@ GameObject:
   - component: {fileID: 2077475230}
   - component: {fileID: 2077475226}
   - component: {fileID: 2077475227}
+  - component: {fileID: 2077475229}
   - component: {fileID: 2077475231}
   - component: {fileID: 2077475228}
   m_Layer: 8
@@ -1256,6 +1257,26 @@ MonoBehaviour:
   attackMaxDistance: 0
   rightFootKickParticles: {fileID: 1636715286560429}
   leftFootKickParticles: {fileID: 1636714282286544}
+--- !u!114 &2077475229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077475225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d5af1a6a4250c74cbf25918d17b17f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerNum: 1
+  horizontal: 
+  vertical: 
+  jump: 
+  grabWall: 
+  dash: 
+  ligthAttack: 
+  heavyAttack: 
 --- !u!4 &2077475230
 Transform:
   m_ObjectHideFlags: 0
@@ -1288,14 +1309,6 @@ MonoBehaviour:
   fallMultiplier: 3.5
   lowJumpMultiplier: 2.5
   jumpForce: 9
-  footstepParticles: {fileID: 6323728496157317144, guid: f8771546520fd44e8831c2f914cb80de,
-    type: 3}
-  jumpParticles: {fileID: 2564037768546537667, guid: 5aad2971e73414b62a17213bc8758a42,
-    type: 3}
-  hardLandingParticles: {fileID: 2564037768546537667, guid: 5aad2971e73414b62a17213bc8758a42,
-    type: 3}
-  dashParticles: {fileID: 1616104946086206, guid: d629b10ab3d7c8e4db53f00ccd9b8af8,
-    type: 3}
 --- !u!1 &1260753888373807
 GameObject:
   m_ObjectHideFlags: 0

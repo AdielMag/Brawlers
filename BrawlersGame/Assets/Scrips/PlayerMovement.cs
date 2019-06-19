@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody rb;
     Animator anim;
     ObjectPooler objPooler;
+    PlayerInput pInput;
 
     public float movementSpeed = 3.5f, movementSmoothMultiplier = 9;
     public float fallMultiplier = 3.5f, lowJumpMultiplier = 2.5f;
@@ -31,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
+        pInput = GetComponent<PlayerInput>();
 
         rightFoot = anim.GetBoneTransform(HumanBodyBones.RightFoot);
         leftFoot = anim.GetBoneTransform(HumanBodyBones.LeftFoot);
@@ -43,13 +45,13 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         // Movement Input
-        dirInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * movementSpeed;
+        dirInput = new Vector2(Input.GetAxis(pInput.horizontal), Input.GetAxis(pInput.vertical)) * movementSpeed;
 
         if (!canMove)
             return;
 
         // Jump Input
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown(pInput.jump))
         {
             if (isWalledLeft || isWalledRight)
             {
@@ -62,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
             Jump();
         }
 
-        if (Input.GetButtonDown("Dash"))
+        if (Input.GetButtonDown(pInput.dash))
         {
             if (canDash)
                 Dash(dirInput);
@@ -99,7 +101,7 @@ public class PlayerMovement : MonoBehaviour
         if (!cantWall && (isWalledRight || isWalledLeft))
         {
 
-            if (Input.GetButton("GrabWall"))
+            if (Input.GetButton(pInput.grabWall))
             {
                 rb.velocity = new Vector2( rb.velocity.x, dir.y * movementSpeed / 2);
                 rb.useGravity = false;
@@ -198,7 +200,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (rb.velocity.y < 0)
             rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
-        else if (rb.velocity.y > 0 && !Input.GetButton("Jump"))
+        else if (rb.velocity.y > 0 && !Input.GetButton(pInput.jump))
             rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
     }
 
