@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: f211c97c84a16614f9db30b4155011ac
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Montserrat SemiBold
+  fontNames:
+  - Montserrat SemiBold
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 7f09d2766d4c13e4fbb7c4ee7599fbd6, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

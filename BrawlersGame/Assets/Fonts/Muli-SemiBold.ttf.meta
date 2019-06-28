@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: a4f1ec252a61ffd46b78000655124b8b
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Muli SemiBold
+  fontNames:
+  - Muli SemiBold
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 4c85845454f7ebc4fa3cdbcadbb22009, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

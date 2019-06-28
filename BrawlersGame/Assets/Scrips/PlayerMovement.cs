@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     bool canMove = true;
     bool canChangeDir = true;
 
-    Vector2 dirInput,targetInput;
+    public Vector2 dirInput,targetInput;
 
     // Animator variables
     float targetHorizontal, targetVertical;
@@ -69,8 +69,6 @@ public class PlayerMovement : MonoBehaviour
             if (canDash)
                 Dash(dirInput);
         }
-
-
     }
 
     private void FixedUpdate()
@@ -105,7 +103,6 @@ public class PlayerMovement : MonoBehaviour
             {
                 rb.velocity = new Vector2( rb.velocity.x, dir.y * movementSpeed / 2);
                 rb.useGravity = false;
-                return;
             }
             else
             {

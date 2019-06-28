@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: d56a25b5f86331f4798f3cc82c763075
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Muli Black
+  fontNames:
+  - Muli Black
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 2926eff56954a26478d3fce4c02dbbed, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
