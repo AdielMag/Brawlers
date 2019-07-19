@@ -9,10 +9,15 @@ public class PlayerSelection : MonoBehaviour
     public Transform charecterSelectableParent;
     public bool playerEntered;
 
+    [Header("Editor Variables")]
+    public Image image;
+    public Text name;
+
     bool canMoveUI = true;
 
-    Transform selectedCharacter;
-    int selectableNum;
+    CharacterSelectable gameSelectedCharacter;
+    Transform currentSelectedCharacter;
+    int currentSelectableNum;
 
     Animator anim;
     PlayerInput pInput;
@@ -28,7 +33,7 @@ public class PlayerSelection : MonoBehaviour
     {
         if (playerEntered)
         {
-            selectorUI.transform.position = Vector3.Lerp(selectorUI.transform.position, selectedCharacter.position, Time.deltaTime * 8);
+            selectorUI.transform.position = Vector3.Lerp(selectorUI.transform.position, currentSelectedCharacter.position, Time.deltaTime * 8);
             HandleSelectorMovement();
         }
 
@@ -44,19 +49,28 @@ public class PlayerSelection : MonoBehaviour
     {
         Vector2 inputDir = new Vector2(Input.GetAxisRaw(pInput.horizontal), Input.GetAxisRaw(pInput.vertical));
 
+        if (Input.GetButtonDown(pInput.ligthAttack))
+        {
+            DeSelectCharacter();
+        }
+
         if (!canMoveUI)
             return;
 
         if (inputDir.x > 0)
         {
-            for (int i = selectableNum + 1; i < charecterSelectableParent.childCount; i++)
+            for (int i = currentSelectableNum + 1; i < charecterSelectableParent.childCount; i++)
             {
                 if (CheckIfSelectableIsFree(i))
                 {
-                    charecterSelectableParent.GetChild(selectableNum).GetComponent<CharacterSelectable>().selected = false;
+                    if (charecterSelectableParent.GetChild(currentSelectableNum).GetComponent<CharacterSelectable>() != gameSelectedCharacter)
+                        charecterSelectableParent.GetChild(currentSelectableNum).GetComponent<CharacterSelectable>().selected = false;
+
                     charecterSelectableParent.GetChild(i).GetComponent<CharacterSelectable>().selected = true;
-                    selectedCharacter = charecterSelectableParent.GetChild(i);
-                    selectableNum = i;
+                    currentSelectedCharacter = charecterSelectableParent.GetChild(i);
+                    currentSelectableNum = i;
+
+                    anim.SetTrigger("ChangeCharacter");
 
                     canMoveUI = false;
                     StartCoroutine(WaitUntilNextMovement());
@@ -65,53 +79,56 @@ public class PlayerSelection : MonoBehaviour
                 }
             }
         }
-
         else if (inputDir.x < 0)
         {
-            for (int i = selectableNum - 1; i > -1; i--)
+            for (int i = currentSelectableNum - 1; i > -1; i--)
             {
                 if (CheckIfSelectableIsFree(i))
                 {
-                    charecterSelectableParent.GetChild(selectableNum).GetComponent<CharacterSelectable>().selected = false;
+                    charecterSelectableParent.GetChild(currentSelectableNum).GetComponent<CharacterSelectable>().selected = false;
                     charecterSelectableParent.GetChild(i).GetComponent<CharacterSelectable>().selected = true;
-                    selectedCharacter = charecterSelectableParent.GetChild(i);
-                    selectableNum = i;
+                    currentSelectedCharacter = charecterSelectableParent.GetChild(i);
+                    currentSelectableNum = i;
 
-                    canMoveUI = false;
+                    anim.SetTrigger("ChangeCharacter"); canMoveUI = false;
                     StartCoroutine(WaitUntilNextMovement());
 
                     break;
                 }
             }
         }
-
         else if (inputDir.y > 0)
         {
-            int targetNum = selectableNum - 6;
+            int targetNum = currentSelectableNum - 6;
             if (CheckIfSelectableIsFree(targetNum))
             {
-                charecterSelectableParent.GetChild(selectableNum).GetComponent<CharacterSelectable>().selected = false;
+                charecterSelectableParent.GetChild(currentSelectableNum).GetComponent<CharacterSelectable>().selected = false;
                 charecterSelectableParent.GetChild(targetNum).GetComponent<CharacterSelectable>().selected = true;
-                selectedCharacter = charecterSelectableParent.GetChild(targetNum);
-                selectableNum = targetNum;
+                currentSelectedCharacter = charecterSelectableParent.GetChild(targetNum);
+                currentSelectableNum = targetNum;
 
-                canMoveUI = false;
+                anim.SetTrigger("ChangeCharacter"); canMoveUI = false;
                 StartCoroutine(WaitUntilNextMovement());
             }
         }
         else if (inputDir.y < 0)
         {
-            int targetNum = selectableNum + 6;
+            int targetNum = currentSelectableNum + 6;
             if (CheckIfSelectableIsFree(targetNum))
             {
-                charecterSelectableParent.GetChild(selectableNum).GetComponent<CharacterSelectable>().selected = false;
+                charecterSelectableParent.GetChild(currentSelectableNum).GetComponent<CharacterSelectable>().selected = false;
                 charecterSelectableParent.GetChild(targetNum).GetComponent<CharacterSelectable>().selected = true;
-                selectedCharacter = charecterSelectableParent.GetChild(targetNum);
-                selectableNum = targetNum;
+                currentSelectedCharacter = charecterSelectableParent.GetChild(targetNum);
+                currentSelectableNum = targetNum;
 
-                canMoveUI = false;
+                anim.SetTrigger("ChangeCharacter"); canMoveUI = false;
                 StartCoroutine(WaitUntilNextMovement());
             }
+        }
+
+        if (Input.GetButtonDown(pInput.jump))
+        {
+            SelectCharacter();
         }
     }
 
@@ -123,15 +140,32 @@ public class PlayerSelection : MonoBehaviour
             if(CheckIfSelectableIsFree(i))
             {
                 charecterSelectableParent.GetChild(i).GetComponent<CharacterSelectable>().selected = true;
-                selectedCharacter = charecterSelectableParent.GetChild(i);
-                selectableNum = i;
+                currentSelectedCharacter = charecterSelectableParent.GetChild(i);
+                currentSelectableNum = i;
                 break;
             }
         }
 
-        selectorUI.transform.position = selectedCharacter.position;
+        selectorUI.transform.position = currentSelectedCharacter.position;
+        ChangeCharacter();
         selectorUI.SetActive(true);
         playerEntered = true;
+    }
+
+    void SelectCharacter()
+    {
+        gameSelectedCharacter = currentSelectedCharacter.GetComponent<CharacterSelectable>();
+        canMoveUI = false;
+
+        anim.SetBool("Selected",true); canMoveUI = false;
+    }
+
+    void DeSelectCharacter()
+    {
+        gameSelectedCharacter = null;
+        canMoveUI = true;
+
+        anim.SetBool("Selected", false);
     }
 
     bool CheckIfSelectableIsFree(int selectableNum)
@@ -140,6 +174,14 @@ public class PlayerSelection : MonoBehaviour
             return false;
 
         return !charecterSelectableParent.GetChild(selectableNum).GetComponent<CharacterSelectable>().selected;
+    }
+
+    public void ChangeCharacter()
+    {
+        CharacterSelectable charSelected = charecterSelectableParent.GetChild(currentSelectableNum).GetComponent<CharacterSelectable>();
+
+        image.sprite = charSelected.icon.sprite;
+        name.text = charSelected.name;
     }
 
     IEnumerator WaitUntilNextMovement()
