@@ -2,9 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using Rewired;
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerSelection : MonoBehaviour
 {
+    // Rewired Stuff
+    public int playerId;
+    private Player player; // The Rewired Player
+    private CharacterController cc;
+
+
     public GameObject selectorUI;
     public Transform charecterSelectableParent;
     public bool playerEntered;
@@ -20,13 +28,14 @@ public class PlayerSelection : MonoBehaviour
     int currentSelectableNum;
 
     Animator anim;
-    PlayerInput pInput;
 
     private void Start()
     { 
         selectorUI.SetActive(false);
         anim = GetComponent<Animator>();
-        pInput = GetComponent<PlayerInput>();
+
+        player = ReInput.players.GetPlayer(playerId);
+        cc = GetComponent<CharacterController>();
     }
 
     private void Update()
@@ -35,11 +44,21 @@ public class PlayerSelection : MonoBehaviour
         {
             selectorUI.transform.position = Vector3.Lerp(selectorUI.transform.position, currentSelectedCharacter.position, Time.deltaTime * 8);
             HandleSelectorMovement();
+
+
+            if (player.GetButtonDown("Jump") && canMoveUI)
+            {
+                SelectCharacter();
+            }
+            else if (player.GetButtonDown("Light Attack"))
+            {
+                DeSelectCharacter();
+            }
         }
 
         // if any button is pressed
-        else if (Input.GetButton(pInput.ligthAttack) || Input.GetButton(pInput.dash) || Input.GetButton(pInput.heavyAttack)
-            || Input.GetButton(pInput.jump) || Input.GetButton(pInput.grabWall))
+        else if (player.GetButton("Light Attack") || player.GetButton("Dash") || player.GetButton("Heavy Attack")
+            || player.GetButton("Jump") || player.GetButton("Grab Wall"))
         {
             EnableSelector();
         }
@@ -47,17 +66,14 @@ public class PlayerSelection : MonoBehaviour
 
     void HandleSelectorMovement()
     {
-        Vector2 inputDir = new Vector2(Input.GetAxisRaw(pInput.horizontal), Input.GetAxisRaw(pInput.vertical));
+        Vector2 inputDir = new Vector2(player.GetAxis("Move Horizontal"), player.GetAxis("Move Vertical"));
 
-        if (Input.GetButtonDown(pInput.ligthAttack))
-        {
-            DeSelectCharacter();
-        }
+        
 
         if (!canMoveUI)
             return;
 
-        if (inputDir.x > 0)
+        if (inputDir.x > .2f)
         {
             for (int i = currentSelectableNum + 1; i < charecterSelectableParent.childCount; i++)
             {
@@ -79,7 +95,7 @@ public class PlayerSelection : MonoBehaviour
                 }
             }
         }
-        else if (inputDir.x < 0)
+        else if (inputDir.x < -.2f)
         {
             for (int i = currentSelectableNum - 1; i > -1; i--)
             {
@@ -97,7 +113,7 @@ public class PlayerSelection : MonoBehaviour
                 }
             }
         }
-        else if (inputDir.y > 0)
+        else if (inputDir.y > .2f)
         {
             int targetNum = currentSelectableNum - 6;
             if (CheckIfSelectableIsFree(targetNum))
@@ -111,7 +127,7 @@ public class PlayerSelection : MonoBehaviour
                 StartCoroutine(WaitUntilNextMovement());
             }
         }
-        else if (inputDir.y < 0)
+        else if (inputDir.y < -.2f)
         {
             int targetNum = currentSelectableNum + 6;
             if (CheckIfSelectableIsFree(targetNum))
@@ -126,10 +142,6 @@ public class PlayerSelection : MonoBehaviour
             }
         }
 
-        if (Input.GetButtonDown(pInput.jump))
-        {
-            SelectCharacter();
-        }
     }
 
     void EnableSelector()
@@ -150,11 +162,35 @@ public class PlayerSelection : MonoBehaviour
         ChangeCharacter();
         selectorUI.SetActive(true);
         playerEntered = true;
+
+        StartCoroutine(WaitUntilNextMovement());
+
     }
 
     void SelectCharacter()
     {
         gameSelectedCharacter = currentSelectedCharacter.GetComponent<CharacterSelectable>();
+
+        GameManager gMan = GameManager.instance;
+
+        switch (playerId)
+        {
+            case 0:
+                gMan.p1Character = gameSelectedCharacter.name;
+                break;
+            case 1:
+                gMan.p2Character = gameSelectedCharacter.name;
+                break;
+            case 2:
+                gMan.p3Character = gameSelectedCharacter.name;
+                break;
+            case 3:
+                gMan.p4Character = gameSelectedCharacter.name;
+                break;
+        }
+
+        gMan.CheckIfCanStartGame();
+
         canMoveUI = false;
 
         anim.SetBool("Selected",true); canMoveUI = false;
@@ -163,6 +199,27 @@ public class PlayerSelection : MonoBehaviour
     void DeSelectCharacter()
     {
         gameSelectedCharacter = null;
+
+        GameManager gMan = GameManager.instance;
+
+        switch (playerId)
+        {
+            case 0:
+                gMan.p1Character = null;
+                break;
+            case 1:
+                gMan.p2Character = null;
+                break;
+            case 2:
+                gMan.p3Character = null;
+                break;
+            case 3:
+                gMan.p4Character = null;
+                break;
+        }
+
+        gMan.CheckIfCanStartGame();
+
         canMoveUI = true;
 
         anim.SetBool("Selected", false);
@@ -176,9 +233,11 @@ public class PlayerSelection : MonoBehaviour
         return !charecterSelectableParent.GetChild(selectableNum).GetComponent<CharacterSelectable>().selected;
     }
 
-    public void ChangeCharacter()
+    public void ChangeCharacter() // Used by an animation event
     {
         CharacterSelectable charSelected = charecterSelectableParent.GetChild(currentSelectableNum).GetComponent<CharacterSelectable>();
+
+        GameManager gMan = GameManager.instance;
 
         image.sprite = charSelected.icon.sprite;
         name.text = charSelected.name;

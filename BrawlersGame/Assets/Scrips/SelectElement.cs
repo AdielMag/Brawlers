@@ -1,9 +1,15 @@
 ﻿using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using Rewired;
 
+[RequireComponent(typeof(CharacterController))]
 public class SelectElement : MonoBehaviour
 {
+    // Rewired Stuff
+    private Player player; // The Rewired Player
+    private CharacterController cc;
+
     public Transform[] objectsToSelect;
     public int currentObjectNum;
 
@@ -12,7 +18,7 @@ public class SelectElement : MonoBehaviour
     bool canMoveUI = true;
     void HandleSelectorMovement()
     {
-        Vector2 inputDir = new Vector2(Input.GetAxisRaw("P1Horizontal"), Input.GetAxisRaw("P1Vertical"));
+        Vector2 inputDir = new Vector2(player.GetAxis("Move Horizontal"), player.GetAxis("Move Vertical"));
 
         if (!canMoveUI)
             return;
@@ -78,13 +84,16 @@ public class SelectElement : MonoBehaviour
     private void Start()
     {
         targetObject = objectsToSelect[0];
+
+        player = ReInput.players.GetPlayer(0);
+        cc = GetComponent<CharacterController>();
     }
 
     private void Update()
     {
         HandleSelectorMovement();
 
-        if (Input.GetButton("P1Jump"))
+        if (player.GetButton("Jump"))
         {
             DoAction();
         }

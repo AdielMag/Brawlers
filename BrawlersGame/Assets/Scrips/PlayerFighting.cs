@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerFighting : MonoBehaviour
 {
@@ -8,11 +9,13 @@ public class PlayerFighting : MonoBehaviour
 
     public float kickMaxDistance = 2.3f, attackMaxDistance;
 
+    [HideInInspector]
+    public Slider hpBar;
+
     int kicks;
     int heavyAttack;
 
     PlayerMovement pMov;
-    PlayerInput pInput;
     Animator anim;
     Rigidbody rb;
 
@@ -21,29 +24,30 @@ public class PlayerFighting : MonoBehaviour
     private void Start()
     {
         pMov = GetComponent<PlayerMovement>();
-        pInput = GetComponent<PlayerInput>();
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
 
         health = maxHealth;
+        hpBar.value = hpBar.maxValue = maxHealth;
+
     }
 
     private void Update()
     {
 
-        if (Input.GetButtonDown(pInput.ligthAttack))
+        if (pMov.player.GetButtonDown("Light Attack"))
         {
             kicks = Random.Range(1, 3);
         }
-        else if (Input.GetButtonUp(pInput.ligthAttack))
+        else if (pMov.player.GetButtonUp("Light Attack"))
         {
             kicks = 0;
         }
 
-        if (Input.GetButtonDown(pInput.heavyAttack)) 
+        if (pMov.player.GetButtonDown("Heavy Attack")) 
         {
             heavyAttack = Random.Range(1, 4);
-        }else if (Input.GetButtonUp(pInput.heavyAttack))
+        }else if (pMov.player.GetButtonUp("Heavy Attack"))
         {
             heavyAttack = 0;
         }
@@ -62,8 +66,14 @@ public class PlayerFighting : MonoBehaviour
 
         rb.velocity = direction * knockbackMultiplayer;
         //rb.drag = 6;
+
+        UpdateHp(health);
     }
 
+    public void UpdateHp(float targetHealth)
+    {
+        hpBar.value = targetHealth;
+    }
     public void Kick(int direction)
     {
         StartCoroutine(KickParticleTimer(direction == 1 ? true : false));
@@ -77,7 +87,7 @@ public class PlayerFighting : MonoBehaviour
         {
             if (hit.transform.GetComponent<PlayerFighting>())
             {
-                StartCoroutine(DamageAndKnockBackOffsetTimer(hit.transform.GetComponent<PlayerFighting>(), 0, -hit.normal, 50));
+                StartCoroutine(DamageAndKnockBackOffsetTimer(hit.transform.GetComponent<PlayerFighting>(), 5, -hit.normal, 50));
             }
         }
     }

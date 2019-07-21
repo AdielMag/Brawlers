@@ -476,7 +476,7 @@ PrefabInstance:
     - target: {fileID: -7661304597096555083, guid: 8c99b01bae03dad4fb257c883d4106b8,
         type: 3}
       propertyPath: name
-      value: asdddd
+      value: Ralph
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c99b01bae03dad4fb257c883d4106b8, type: 3}
@@ -711,6 +711,11 @@ PrefabInstance:
       propertyPath: charecterSelectableParent
       value: 
       objectReference: {fileID: 1680972109}
+    - target: {fileID: 5036436786426600716, guid: 9b674874368b9624eb6e67b306b230a8,
+        type: 3}
+      propertyPath: playerId
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b674874368b9624eb6e67b306b230a8, type: 3}
 --- !u!224 &442859066 stripped
@@ -1923,6 +1928,11 @@ PrefabInstance:
       propertyPath: charecterSelectableParent
       value: 
       objectReference: {fileID: 1680972109}
+    - target: {fileID: 5036436786426600716, guid: 9b674874368b9624eb6e67b306b230a8,
+        type: 3}
+      propertyPath: playerId
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5620147102780228802, guid: 9b674874368b9624eb6e67b306b230a8,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -2148,20 +2158,6 @@ MonoBehaviour:
   m_Spacing: {x: 49.1, y: 26.19}
   m_Constraint: 0
   m_ConstraintCount: 2
---- !u!1 &1701429262 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8542475972818020321, guid: 9b674874368b9624eb6e67b306b230a8,
-    type: 3}
-  m_PrefabInstance: {fileID: 8542475973118586500}
-  m_PrefabAsset: {fileID: 0}
---- !u!222 &1701429266
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1701429262}
-  m_CullTransparentMesh: 0
 --- !u!1 &1750310234
 GameObject:
   m_ObjectHideFlags: 0
@@ -2346,6 +2342,11 @@ PrefabInstance:
       propertyPath: charecterSelectableParent
       value: 
       objectReference: {fileID: 1680972109}
+    - target: {fileID: 5036436786426600716, guid: 9b674874368b9624eb6e67b306b230a8,
+        type: 3}
+      propertyPath: playerId
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b674874368b9624eb6e67b306b230a8, type: 3}
 --- !u!224 &1755786092 stripped
@@ -3069,7 +3070,7 @@ PrefabInstance:
     - target: {fileID: -7661304597096555083, guid: 8c99b01bae03dad4fb257c883d4106b8,
         type: 3}
       propertyPath: name
-      value: asdsad
+      value: Cid
       objectReference: {fileID: 0}
     - target: {fileID: 5957466494570107994, guid: 8c99b01bae03dad4fb257c883d4106b8,
         type: 3}
@@ -3207,18 +3208,8 @@ PrefabInstance:
       objectReference: {fileID: 1750310234}
     - target: {fileID: 5036436786426600716, guid: 9b674874368b9624eb6e67b306b230a8,
         type: 3}
-      propertyPath: chacterSelectableParent
-      value: 
-      objectReference: {fileID: 1680972108}
-    - target: {fileID: 5036436786426600716, guid: 9b674874368b9624eb6e67b306b230a8,
-        type: 3}
       propertyPath: charecterSelectableParent
       value: 
       objectReference: {fileID: 1680972109}
-    - target: {fileID: 3721732380947019275, guid: 9b674874368b9624eb6e67b306b230a8,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b674874368b9624eb6e67b306b230a8, type: 3}
